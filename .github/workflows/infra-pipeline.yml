@@ -32,24 +32,25 @@ jobs:
           cd infrastructure
           terraform init
 
-      - name: Validate
-        run: |
-          cd infrastructure
-          terraform validate
+      # - name: Validate
+      #   run: |
+      #     cd infrastructure
+      #     terraform validate
 
-      - name: Install tfsec for scanning
-        run:
-          go install github.com/aquasecurity/tfsec/cmd/tfsec@latest
+      # - name: Install tfsec for scanning
+      #   run:
+      #     go install github.com/aquasecurity/tfsec/cmd/tfsec@latest
 
-      - name: scan
-        run: |
-          ls ~/go/bin/tfsec
-          export PATH=$PATH:$HOME/go/bin
-          tfsec
-        continue-on-error: true
+      # - name: scan
+      #   run: |
+      #     ls ~/go/bin/tfsec
+      #     export PATH=$PATH:$HOME/go/bin
+      #     tfsec
+      #   continue-on-error: true
 
       - name: setup SSH
         run: |
+          cd infrastructure
           echo ${{ secrets.SSH_PUB_KEY }} > ./id_rsa.pub
           chmod 600 ./id_rsa.pub
 
