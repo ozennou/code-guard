@@ -33,12 +33,20 @@ jobs:
 
       - name: Validate
         run: |
-          pwd
           cd infrastructure
           terraform validate
-          
+         
+      - name: scan
+        run: |
+          cd infrastructure
+          tfsec
+
       - name: plan
         run: |
-          pwd
+          ls ~/.ssh
+          ls -la ~/.ssh
+
+      - name: plan
+        run: |
           cd infrastructure
           terraform plan
