@@ -71,6 +71,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: virtual machines ip address
-          path: ./virtual_machines.ini
+          path: ./infrastructure/virtual_machines.ini
           retention-days: 1
           
