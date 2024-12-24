@@ -65,7 +65,6 @@ jobs:
       - name: save azure VMs public ip address
         if: github.event_name == 'push'
         run: terraform output > virtual_machines.ini
-        working-directory: ./
         
       - name: Upload virtual_machines.ini
         if: github.event_name == 'push'
