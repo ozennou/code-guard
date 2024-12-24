@@ -13,7 +13,7 @@
   tasks:
     - name: Copy .env file to remote server
       ansible.builtin.copy:
-        src: "../.env"   # Local path on your machine
+        src: "../.env"
         dest: "/tmp/.env"   
     
     - name: Get env file content
