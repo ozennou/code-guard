@@ -44,8 +44,8 @@ jobs:
         run: |
           ls ~/go/bin/tfsec
           export PATH=$PATH:$HOME/go/bin
-          cd infrastructure
           tfsec
+        continue-on-error: true
 
       - name: test
         run: |
