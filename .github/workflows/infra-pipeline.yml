@@ -22,8 +22,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Azure login
+        uses: azure/login@v1.4.6
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}  
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}  
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }} 
+
       - name: Setup azure required envs
         run: |
+          cd infrastructure
           export ARM_CLIENT_ID=${{ secrets.ARM_CLIENT_ID }}
           export ARM_CLIENT_SECRET=${{ secrets.ARM_CLIENT_SECRET }}
           export ARM_TENANT_ID=${{ secrets.ARM_TENANT_ID }}
@@ -31,5 +39,4 @@ jobs:
 
       - name: Init
         run: |
-          cd infrastructure
           terraform init
