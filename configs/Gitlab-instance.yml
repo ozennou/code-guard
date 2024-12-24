@@ -1,6 +1,13 @@
 - name: Install GitLab EE
   hosts: gitlab-instance
   become: true
+
+  pre_tasks:
+    - name: Set SSH user for Ubuntu
+      ansible.builtin.set_fact:
+        ansible_user: ubuntu
+      when: ansible_os_family == "Debian"
+
   tasks:
     - name: Update and Install the Dependencies
       apt:

@@ -4,3 +4,4 @@
 .env
 .env2
 configs/gitlab.rb
+configs/inventory.ini

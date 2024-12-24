@@ -22,6 +22,7 @@ jobs:
       ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
       ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
       ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+      TF_VAR_ssh_pub_key_file: "./id_rsa.pub"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -47,10 +48,10 @@ jobs:
           tfsec
         continue-on-error: true
 
-      - name: test
+      - name: setup SSH
         run: |
-          ls ~/.ssh
-          ls -la ~/.ssh
+          echo ${{ secrets.SSH_PUB_KEY }} > ./id_rsa.pub
+          chmod 600 ./id_rsa.pub
 
       - name: plan
         run: |

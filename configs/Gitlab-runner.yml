@@ -4,6 +4,12 @@
   vars:
     env_file: "/tmp/.env" 
 
+  pre_tasks:
+    - name: Set SSH user for Ubuntu
+      ansible.builtin.set_fact:
+        ansible_user: ubuntu
+      when: ansible_os_family == "Debian"
+
   tasks:
     - name: Copy .env file to remote server
       ansible.builtin.copy:
