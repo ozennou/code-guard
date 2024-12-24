@@ -37,6 +37,6 @@ jobs:
           export ARM_TENANT_ID=${{ secrets.ARM_TENANT_ID }}
           export ARM_SUBSCRIPTION_ID=${{ secrets.ARM_SUBSCRIPTION_ID }}
 
-      - name: Init
-        run: |
-          terraform init
+      # - name: Init
+      #   run: |
+      #     terraform init
