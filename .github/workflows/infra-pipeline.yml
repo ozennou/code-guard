@@ -56,3 +56,8 @@ jobs:
       - name: plan
         run: |
           terraform plan
+
+      - name: plan
+        if: github.event_name == 'push'
+        run: |
+          terraform apply -auto-approve
