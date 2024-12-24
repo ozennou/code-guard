@@ -35,13 +35,17 @@ jobs:
         run: |
           cd infrastructure
           terraform validate
-         
+
+      - name: Install tfsec for scanning
+        run:
+          brew install tfsec
+
       - name: scan
         run: |
           cd infrastructure
           tfsec
 
-      - name: plan
+      - name: test
         run: |
           ls ~/.ssh
           ls -la ~/.ssh
