@@ -14,5 +14,16 @@ jobs:
   init:
     runs-on: ubuntu-latest
     steps:
-      - name: check terraform
-        run: terraform version
+      - uses: actions/checkout@v4
+
+      - name: Azure login
+        uses: azure/login@v1.4.6
+        with:
+          client-id: ${{ secrets.ARM_CLIENT_ID }}
+          tenant-id: ${{ secrets.ARM_TENANT_ID }}
+          subscription-id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+
+      - name: Init
+        run: |
+          cd infrastructure
+          terraform init
