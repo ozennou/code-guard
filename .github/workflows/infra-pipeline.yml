@@ -39,7 +39,7 @@ jobs:
           terraform validate
           
       - name: plan
-      run: |
-        pwd
-        cd infrastructure
-        terraform plan
+        run: |
+          pwd
+          cd infrastructure
+          terraform plan
