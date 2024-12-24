@@ -1,0 +1,29 @@
+- name: Install GitLab EE
+  hosts: gitlab-instance
+  become: true
+  tasks:
+    - name: Update and Install the Dependencies
+      apt:
+        name: "{{ item }}"
+        state: present
+        update_cache: yes
+      loop: [curl, openssh-server, ca-certificates, tzdata, perl]
+
+    - name: Add GitLab EE package repo
+      shell: curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ee/script.deb.sh | bash
+
+    - name: Ensure the existance of /etc/gitlab directory
+      file:
+        path: /etc/gitlab
+        state: directory
+
+    - name: Copy gitlab.rb file
+      copy:
+        src: ./gitlab.rb
+        dest: /etc/gitlab/gitlab.rb
+
+    - name: Install GitLab EE package
+      apt:
+        name: gitlab-ee
+        state: present
+        update_cache: yes

@@ -1,0 +1,6 @@
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+.env
+.env2
+configs/gitlab.rb

@@ -1,0 +1,32 @@
+- name: Install GitLab Runner and link it with GitLab ee instance
+  hosts: gitlab-runner
+  become: true
+  vars:
+    env_file: "/tmp/.env" 
+
+  tasks:
+    - name: Copy .env file to remote server
+      ansible.builtin.copy:
+        src: "../.env"   # Local path on your machine
+        dest: "/tmp/.env"   
+    
+    - name: Get env file content
+      slurp:
+        src: /tmp/.env
+      register: env_file
+
+    - name: Parse environment
+      set_fact:
+        env_vars: "{{ ('{' + (env_file.content | b64decode).split('\n') | select | map('regex_replace', '([^=]*)=(.*)', '\"\\1\": \"\\2\"') | join(',') + '}') | from_json }}"
+
+    - name: Add GitLab Runner package repo
+      shell: curl -L "https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh" | bash
+
+    - name: Install GitLab Runner
+      apt:
+        name: gitlab-runner
+        state: present
+        update_cache: yes 
+    
+    - name: Ling Runner with GitLab ee instance
+      shell: gitlab-runner register --non-interactive --url "{{ env_vars['GITLAB_URL'] }}" --registration-token "{{ env_vars['RUNNER_REGISTRATION_TOKEN'] }}" --executor "shell" --tag-list "shell"
