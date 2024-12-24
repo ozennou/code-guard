@@ -12,6 +12,12 @@ on:
 
 jobs:
   init:
+  
+    permissions:
+      actions: read
+      contents: read
+      id-token: write
+  
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
