@@ -63,17 +63,30 @@
         state: present
         update_cache: yes
 
-    - name: Configure Grafana admin credentials
-      lineinfile:
+    - name: Configure Grafana security settings
+      blockinfile:
         path: /etc/grafana/grafana.ini
-        regexp: "^;?admin_{{ item.key }} *="
-        line: "admin_{{ item.key }} = {{ item.value }}"
-        insertafter: "^[security]"
-      loop:
-        - { key: "user", value: "{{ env_vars['GF_SECURITY_ADMIN_USER'] }}" }
-        - { key: "password", value: "{{ env_vars['GF_SECURITY_ADMIN_PASSWORD'] }}" }
+        insertafter: "[security]"
+        block: |
+          disable_initial_admin_creation = false
+          admin_user = {{ env_vars['GF_SECURITY_ADMIN_USER'] }}
+          admin_password = {{ env_vars['GF_SECURITY_ADMIN_PASSWORD'] }}
+        marker: "# {mark} ANSIBLE MANAGED BLOCK - ADMIN CREDENTIALS"
 
-    - name: Start grafana service
+    - name: Remove duplicate admin settings
+      replace:
+        path: /etc/grafana/grafana.ini
+        regexp: '^;?(admin_user|admin_password).*\n'
+        replace: ''
+        before: '# {mark} ANSIBLE MANAGED BLOCK - ADMIN CREDENTIALS'
+
+    - name: Ensure proper section spacing
+      replace:
+        path: /etc/grafana/grafana.ini
+        regexp: '\n\n\n+'
+        replace: '\n\n'
+
+    - name: restart grafana service
       systemd:
         name: grafana-server
         state: restarted

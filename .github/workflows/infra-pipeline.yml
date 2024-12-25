@@ -22,7 +22,7 @@ jobs:
     defaults:
       run:
         working-directory: ./infrastructure
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
 
@@ -76,7 +76,7 @@ jobs:
     defaults:
       run:
         working-directory: ./playbooks
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: Test-Scan-Apply-infrastructure
     steps:
       - uses: actions/checkout@v4
