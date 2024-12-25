@@ -8,6 +8,11 @@
 
 <img src="./imgs/diagram.png" width="800" style="border: 5px solid black; border-radius: 15px; margin-left: 30px;" />
 
+## Details
+- In CodeGuard, I use Terraform to create the Azure infrastructure for the project by configuring the ```tfstate``` in Azure Blob Storage and creating the necessary resources for the infrastructure, such as VMs, NICs, security groups, and virtual networks.
+- For the GitLab-EE configuration, I use Ansible to install GitLab-EE and all its dependencies, configure it, and also configure the GitLab Runner on the second VM, linking it to the GitLab instance so it's ready to execute jobs.
+- All of this is automated, which is why I use GitHub Actions to create a pipeline that validates the code, scans for potential security risks, plans and applies the Terraform configuration, and then runs the Ansible playbooks to configure GitLab-EE and the GitLab Runner on the infrastructure VMs.
+
 ## Resources
 ### Storing terraform state in azure storage:
 https://learn.microsoft.com/en-us/azure/developer/terraform/store-state-in-azure-storage?tabs=azure-cli
@@ -16,3 +21,6 @@ https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs
 ### Run Ansible playbooks on GitHub actions
 https://groups.google.com/g/ansible-project/c/OZPu-b17n_w?pli=1
 
+![img1](./imgs/img3.png)
+![img1](./imgs/img4.png)
+![img1](./imgs/img2.png)
