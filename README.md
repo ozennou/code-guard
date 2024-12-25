@@ -1,3 +1,4 @@
+[![Infrastructure CI/CD pipeline](https://github.com/ozennou/code-keeper/actions/workflows/infra-pipeline.yml/badge.svg)](https://github.com/ozennou/code-keeper/actions/workflows/infra-pipeline.yml)
 ## Resources
 ### Storing terraform state in azure storage:
 https://learn.microsoft.com/en-us/azure/developer/terraform/store-state-in-azure-storage?tabs=azure-cli
