@@ -83,7 +83,9 @@ jobs:
 
       - name: Setup SSH
         run: |
-          echo ${{ secrets.SSH_PRIVATE_KEY}} > ./id_rsa
+          cat << EOF > ./id_rsa
+          ${{ secrets.SSH_PRIVATE_KEY}}
+          EOF
           chmod 600 ./id_rsa
 
       - name: Install ansible
