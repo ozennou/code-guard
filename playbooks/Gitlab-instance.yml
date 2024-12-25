@@ -6,7 +6,7 @@
 
   tasks:
     - name: Copy .env file to remote server
-      ansible.builtin.copy:
+      copy:
         src: "./.env"
         dest: "/tmp/.env"   
     
@@ -48,16 +48,12 @@
         state: present
         update_cache: yes
 
-    - name: Add Grafana package repository
-      apt_key:
-        url: https://apt.grafana.com/gpg.key
-        state: present
-        validate_certs: yes
-      register: grafana_key
+    - name: Add Grafana GPG key
+      shell: wget -q -O - https://apt.grafana.com/gpg.key | gpg --dearmor | sudo tee /usr/share/keyrings/grafana.gpg > /dev/null
 
     - name: Add Grafana repository
       apt_repository:
-        repo: "deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://apt.grafana.com stable main"
+        repo: "deb [signed-by=/usr/share/keyrings/grafana.gpg] https://apt.grafana.com stable main"
         state: present
         filename: grafana
 
@@ -66,9 +62,15 @@
         name: grafana
         state: present
         update_cache: yes
-      environment:
-        GF_SECURITY_ADMIN_USER: "{{ env_vars['GF_SECURITY_ADMIN_USER'] }}"
-        GF_SECURITY_ADMIN_PASSWORD: "{{ env_vars['GF_SECURITY_ADMIN_PASSWORD'] }}"
+
+    - name: Configure Grafana admin credentials
+      lineinfile:
+        path: /etc/grafana/grafana.ini
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+      loop:
+        - { regexp: '^admin_user *=', line: 'admin_user = {{ env_vars["GF_SECURITY_ADMIN_USER"] }}' }
+        - { regexp: '^admin_password *=', line: 'admin_password = {{ env_vars["GF_SECURITY_ADMIN_PASSWORD"] }}' }
     
     - name: Start grafana service
       systemd:
