@@ -164,7 +164,7 @@ resource "azurerm_network_security_group" "default" {
 
   security_rule {
     name                       = "Allow-HTTPS"
-    priority                   = 1002
+    priority                   = 1003
     direction                  = "Inbound"
     access                     = "Allow"
     protocol                   = "Tcp"
