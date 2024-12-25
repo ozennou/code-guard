@@ -104,8 +104,6 @@ jobs:
           cat << EOF > .env
           ROOT_PASSWD=${{ secrets.GITLAB_ROOT_PASSWD }}
           RUNNER_REGISTRATION_TOKEN=${{ secrets.GITLAB_RUNNER_REGISTRATION_TOKEN }}
-          GF_SECURITY_ADMIN_USER=${{ secrets.GF_SECURITY_ADMIN_USER }}
-          GF_SECURITY_ADMIN_PASSWORD=${{ secrets.GF_SECURITY_ADMIN_PASSWORD }}
           GITLAB_URL=http://$(cat virtual_machines.ini | grep main_vm | awk -F' = "' '{print $2}' | sed 's/"$//' | tr -d '\n')
           EOF
           cat << EOF > inventory.ini
