@@ -66,13 +66,15 @@
     - name: Configure Grafana admin credentials
       lineinfile:
         path: /etc/grafana/grafana.ini
-        regexp: "{{ item.regexp }}"
-        line: "{{ item.line }}"
+        regexp: "^;?admin_{{ item.key }} *="
+        line: "admin_{{ item.key }} = {{ item.value }}"
+        insertafter: "^[security]"
       loop:
-        - { regexp: '^admin_user *=', line: 'admin_user = {{ env_vars["GF_SECURITY_ADMIN_USER"] }}' }
-        - { regexp: '^admin_password *=', line: 'admin_password = {{ env_vars["GF_SECURITY_ADMIN_PASSWORD"] }}' }
-    
+        - { key: "user", value: "{{ env_vars['GF_SECURITY_ADMIN_USER'] }}" }
+        - { key: "password", value: "{{ env_vars['GF_SECURITY_ADMIN_PASSWORD'] }}" }
+
     - name: Start grafana service
       systemd:
         name: grafana-server
-        state: started 
+        state: restarted
+        daemon_reload: yes 
