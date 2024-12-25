@@ -38,7 +38,7 @@
       copy:
         src: ./gitlab.rb
         dest: /etc/gitlab/gitlab.rb
-        user: root
+        owner: root
         group: root
         mode: '0644'
 
@@ -67,8 +67,8 @@
         state: present
         update_cache: yes
       environment:
-        GF_SECURITY_ADMIN_USER: {{ env_vars['GF_SECURITY_ADMIN_USER'] }}
-        GF_SECURITY_ADMIN_PASSWORD: {{ env_vars['GF_SECURITY_ADMIN_PASSWORD'] }}
+        GF_SECURITY_ADMIN_USER: "{{ env_vars['GF_SECURITY_ADMIN_USER'] }}"
+        GF_SECURITY_ADMIN_PASSWORD: "{{ env_vars['GF_SECURITY_ADMIN_PASSWORD'] }}"
     
     - name: Start grafana service
       systemd:

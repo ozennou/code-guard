@@ -114,7 +114,6 @@ jobs:
           [gitlab-runner]
           $(cat virtual_machines.ini | grep runner_vm | awk -F' = "' '{print $2}' | sed 's/"$//' | tr -d '\n') ansible_user=ubuntu ansible_ssh_private_key_file=./id_rsa
           EOF
-          cat inventory.ini
           cat << EOF > gitlab.rb
           external_url 'http://$(cat virtual_machines.ini | grep main_vm | awk -F' = "' '{print $2}' | sed 's/"$//' | tr -d '\n')'
           gitlab_rails['initial_root_password'] = "${{ secrets.GITLAB_ROOT_PASSWD }}"
