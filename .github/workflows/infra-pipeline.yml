@@ -71,6 +71,8 @@ jobs:
           retention-days: 1
 
   ansible:
+    env:
+      ANSIBLE_HOST_KEY_CHECKING: False
     defaults:
       run:
         working-directory: ./configs
@@ -101,6 +103,19 @@ jobs:
           ROOT_PASSWD=${{ secrets.GITLAB_ROOT_PASSWD }}
           RUNNER_REGISTRATION_TOKEN=${{ secrets.GITLAB_RUNNER_REGISTRATION_TOKEN }}
           EOF
+          cat << EOF > inventory.ini
+          [gitlab-instance]
+          $(cat virtual_machines.ini | grep main_vm | awk -F' = "' '{print $2}' | sed 's/"$//' | tr -d '\n') ansible_user=ubuntu ansible_ssh_private_key_file=./private_key.pem
+          [gitlab-runner]
+          $(cat virtual_machines.ini | grep runner_vm | awk -F' = "' '{print $2}' | sed 's/"$//' | tr -d '\n') ansible_user=ubuntu ansible_ssh_private_key_file=./private_key.pem
+          EOF
+          cat inventory.ini
+          cat << EOF > gitlab.rb
+          external_url 'http://$(cat virtual_machines.ini | grep main_vm | awk -F' = "' '{print $2}' | sed 's/"$//' | tr -d '\n')'
+          gitlab_rails['initial_root_password'] = "${{ secrets.GITLAB_ROOT_PASSWD }}"
+          gitlab_rails['initial_shared_runners_registration_token'] = "${{ secrets.GITLAB_RUNNER_REGISTRATION_TOKEN }}"
+          EOF
+          cat gitlab.rb
 
-      - name: test
-        run: ls -la
+      - name: Run GitLab instance playbook
+        run: ansible-playbook -i inventory.ini Gitlab-instance.yml
