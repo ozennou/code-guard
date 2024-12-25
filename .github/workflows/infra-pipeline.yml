@@ -83,8 +83,8 @@ jobs:
 
       - name: Setup SSH
         run: |
-          echo ${{ secrets.SSH_PRIVATE_KEY}} > ./private_key.pem
-          chmod 600 ./private_key.pem
+          echo ${{ secrets.SSH_PRIVATE_KEY}} > ./id_rsa
+          chmod 600 ./id_rsa
 
       - name: Install ansible
         run: |
@@ -105,9 +105,9 @@ jobs:
           EOF
           cat << EOF > inventory.ini
           [gitlab-instance]
-          $(cat virtual_machines.ini | grep main_vm | awk -F' = "' '{print $2}' | sed 's/"$//' | tr -d '\n') ansible_user=ubuntu ansible_ssh_private_key_file=./private_key.pem
+          $(cat virtual_machines.ini | grep main_vm | awk -F' = "' '{print $2}' | sed 's/"$//' | tr -d '\n') ansible_user=ubuntu ansible_ssh_private_key_file=./id_rsa
           [gitlab-runner]
-          $(cat virtual_machines.ini | grep runner_vm | awk -F' = "' '{print $2}' | sed 's/"$//' | tr -d '\n') ansible_user=ubuntu ansible_ssh_private_key_file=./private_key.pem
+          $(cat virtual_machines.ini | grep runner_vm | awk -F' = "' '{print $2}' | sed 's/"$//' | tr -d '\n') ansible_user=ubuntu ansible_ssh_private_key_file=./id_rsa
           EOF
           cat inventory.ini
           cat << EOF > gitlab.rb
@@ -118,4 +118,6 @@ jobs:
           cat gitlab.rb
 
       - name: Run GitLab instance playbook
+        run: ssh -o StrictHostKeyChecking=no -i id_rsa ubuntu@$(cat virtual_machines.ini | grep main_vm | awk -F' = "' '{print $2}' | sed 's/"$//' | tr -d '\n')
+      - name: test
         run: ansible-playbook -i inventory.ini Gitlab-instance.yml
