@@ -11,7 +11,7 @@ on:
     workflow_dispatch:
 
 jobs:
-  Apply-infrastructure:
+  Test-Scan-Apply-infrastructure:
     env:
       ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
       ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
