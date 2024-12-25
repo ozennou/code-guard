@@ -8,7 +8,7 @@
         name: "{{ item }}"
         state: present
         update_cache: yes
-      loop: [curl, openssh-server, ca-certificates, tzdata, perl]
+      loop: [curl, openssh-server, ca-certificates, tzdata, perl, apt-transport-https, software-properties-common, wget]
 
     - name: Add GitLab EE package repo
       shell: curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ee/script.deb.sh | bash
@@ -22,9 +22,36 @@
       copy:
         src: ./gitlab.rb
         dest: /etc/gitlab/gitlab.rb
+        user: root
+        group: root
+        mode: '0644'
 
     - name: Install GitLab EE package
       apt:
         name: gitlab-ee
         state: present
         update_cache: yes
+
+    - name: Add Grafana package repository
+      apt_key:
+        url: https://apt.grafana.com/gpg.key
+        state: present
+        validate_certs: yes
+      register: grafana_key
+
+    - name: Add Grafana repository
+      apt_repository:
+        repo: "deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://apt.grafana.com stable main"
+        state: present
+        filename: grafana
+
+    - name: Install Grafana
+      apt:
+        name: grafana
+        state: present
+        update_cache: yes
+    
+    - name: Start grafana service
+      systemd:
+        name: grafana-server
+        state: started 
