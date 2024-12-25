@@ -3,6 +3,6 @@
 *.tfstate.*
 .env
 .env2
-configs/gitlab.rb
-configs/inventory.ini
+playbooks/gitlab.rb
+playbooks/inventory.ini
 test

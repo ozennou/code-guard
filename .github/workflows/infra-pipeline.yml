@@ -75,7 +75,7 @@ jobs:
       ANSIBLE_HOST_KEY_CHECKING: False
     defaults:
       run:
-        working-directory: ./configs
+        working-directory: ./playbooks
     runs-on: ubuntu-latest
     needs: Test-Scan-Apply-infrastructure
     steps:
@@ -97,7 +97,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: virtual machines ip address
-          path: ./configs
+          path: ./playbooks
 
       - name: set the required environments
         run: |
@@ -117,6 +117,9 @@ jobs:
           external_url 'http://$(cat virtual_machines.ini | grep main_vm | awk -F' = "' '{print $2}' | sed 's/"$//' | tr -d '\n')'
           gitlab_rails['initial_root_password'] = "${{ secrets.GITLAB_ROOT_PASSWD }}"
           gitlab_rails['initial_shared_runners_registration_token'] = "${{ secrets.GITLAB_RUNNER_REGISTRATION_TOKEN }}"
+          prometheus_monitoring['enable'] = false
+          sidekiq['metrics_enabled'] = false
+          puma['exporter_enabled'] = false
           EOF
           cat gitlab.rb
 
