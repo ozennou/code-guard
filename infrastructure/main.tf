@@ -163,7 +163,7 @@ resource "azurerm_network_security_group" "default" {
   }
 
   security_rule {
-    name                       = "Allow-HTTPS"
+    name                       = "Allow-MT"
     priority                   = 1003
     direction                  = "Inbound"
     access                     = "Allow"
