@@ -2,13 +2,6 @@
   hosts: gitlab-instance
   become: true
 
-  pre_tasks:
-    - name: Set SSH user and private key file for Ubuntu
-      ansible.builtin.set_fact:
-        ansible_user: ubuntu
-        ansible_ssh_private_key_file: ./private_key.pem
-      when: ansible_os_family == "Debian"
-
   tasks:
     - name: Update and Install the Dependencies
       apt:
