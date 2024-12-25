@@ -124,8 +124,9 @@ jobs:
           ls -l id_rsa
           ssh-keygen -l -f id_rsa
         continue-on-error: true
-
+          
       - name: Run GitLab instance playbook
         run: ssh -o StrictHostKeyChecking=no -i id_rsa ubuntu@$(cat virtual_machines.ini | grep main_vm | awk -F' = "' '{print $2}' | sed 's/"$//' | tr -d '\n')
+        continue-on-error: true
       - name: test
         run: ansible-playbook -i inventory.ini Gitlab-instance.yml
