@@ -1,3 +1,5 @@
+[![Infrastructure CI/CD pipeline](https://github.com/ozennou/code-keeper/actions/workflows/infra-pipeline.yml/badge.svg)](https://github.com/ozennou/code-keeper/actions/workflows/infra-pipeline.yml)
+
 # CodeGuard
 
 ## Resources
