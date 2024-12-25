@@ -34,5 +34,10 @@
         state: present
         update_cache: yes 
     
-    - name: Ling Runner with GitLab ee instance
-      shell: gitlab-runner register --non-interactive --url "{{ env_vars['GITLAB_URL'] }}" --registration-token "{{ env_vars['RUNNER_REGISTRATION_TOKEN'] }}" --executor "shell" --tag-list "shell"
+    - name: Link Runner with GitLab ee instance
+      shell: >
+        gitlab-runner register --non-interactive
+        --url "{{ env_vars['GITLAB_URL'] }}"
+        --registration-token "{{ env_vars['RUNNER_REGISTRATION_TOKEN'] }}"
+        --executor "shell"
+        --tag-list "shell"

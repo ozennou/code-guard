@@ -104,6 +104,7 @@ jobs:
           cat << EOF > .env
           ROOT_PASSWD=${{ secrets.GITLAB_ROOT_PASSWD }}
           RUNNER_REGISTRATION_TOKEN=${{ secrets.GITLAB_RUNNER_REGISTRATION_TOKEN }}
+          GITLAB_URL=http://$(cat virtual_machines.ini | grep main_vm | awk -F' = "' '{print $2}' | sed 's/"$//' | tr -d '\n')
           EOF
           cat << EOF > inventory.ini
           [gitlab-instance]
@@ -123,5 +124,7 @@ jobs:
         run: ansible-playbook -i inventory.ini Gitlab-instance.yml
 
       - name: Configure GitLab Runner
-        run: ansible-playbook -i inventory.ini Gitlab-runner.yml
+        run: |
+          cat .env
+          ansible-playbook -i inventory.ini Gitlab-runner.yml
     
