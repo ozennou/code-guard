@@ -84,6 +84,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Init
+        run: |
+          terraform init
+
       - name: setup SSH
         run: |
           echo ${{ secrets.SSH_PUB_KEY }} > ./id_rsa.pub
