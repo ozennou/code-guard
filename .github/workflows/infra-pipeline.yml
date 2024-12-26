@@ -22,7 +22,7 @@ jobs:
     defaults:
       run:
         working-directory: ./infrastructure
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
 
@@ -54,7 +54,7 @@ jobs:
     defaults:
       run:
         working-directory: ./infrastructure
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
         
@@ -81,7 +81,7 @@ jobs:
         working-directory: ./infrastructure
     if: github.event_name == 'push'
     needs: [validate-plan, Scan]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
 
@@ -115,7 +115,7 @@ jobs:
       run:
         working-directory: ./playbooks
     if: github.event_name == 'push'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: Apply
     steps:
       - uses: actions/checkout@v4
