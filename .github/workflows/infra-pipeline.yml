@@ -86,8 +86,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Init
-        run: |
-          terraform init
+        run: terraform init
 
       - name: setup SSH
         run: |
@@ -95,8 +94,7 @@ jobs:
           chmod 600 ./id_rsa.pub
     
       - name: apply
-        run: |
-          terraform apply -auto-approve
+        run: terraform apply -auto-approve
 
       - name: save azure VMs public ip address
         run: terraform output > virtual_machines.ini
@@ -175,7 +173,6 @@ jobs:
           gitlab_exporter['enable'] = true
           gitlab_exporter['listen_address'] = '0.0.0.0:9168'
           EOF
-          cat gitlab.rb
 
       - name: Configure GitLab EE
         run: ansible-playbook -i inventory.ini Gitlab-instance.yml
