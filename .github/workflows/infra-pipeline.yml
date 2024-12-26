@@ -11,7 +11,7 @@ on:
     workflow_dispatch:
 
 jobs:
-  Test-Scan-Apply-infrastructure:
+  validate-plan:
     env:
       ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
       ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
@@ -34,6 +34,30 @@ jobs:
         run: |
           terraform validate
 
+      - name: setup SSH
+        run: |
+          echo ${{ secrets.SSH_PUB_KEY }} > ./id_rsa.pub
+          chmod 600 ./id_rsa.pub
+
+      - name: plan
+        run: |
+          terraform plan
+
+  Scan:
+    env:
+      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+      ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+      TF_VAR_ssh_pub_key_file: "./id_rsa.pub"
+      TF_VAR_admin_user: "ubuntu"
+    defaults:
+      run:
+        working-directory: ./infrastructure
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        
       - name: Install tfsec for scanning
         run:
           go install github.com/aquasecurity/tfsec/cmd/tfsec@latest > /dev/null 2>&1
@@ -44,15 +68,27 @@ jobs:
           tfsec
         continue-on-error: true
 
+  Apply:
+    env:
+      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+      ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+      TF_VAR_ssh_pub_key_file: "./id_rsa.pub"
+      TF_VAR_admin_user: "ubuntu"
+    defaults:
+      run:
+        working-directory: ./infrastructure
+    needs: [validate-plan, Scan]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
       - name: setup SSH
         run: |
           echo ${{ secrets.SSH_PUB_KEY }} > ./id_rsa.pub
           chmod 600 ./id_rsa.pub
-
-      - name: plan
-        run: |
-          terraform plan
-
+    
       - name: apply
         if: github.event_name == 'push'
         run: |
@@ -77,7 +113,7 @@ jobs:
       run:
         working-directory: ./playbooks
     runs-on: ubuntu-latest
-    needs: Test-Scan-Apply-infrastructure
+    needs: Apply
     steps:
       - uses: actions/checkout@v4
 

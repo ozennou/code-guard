@@ -1,24 +1,8 @@
 - name: Install GitLab EE
   hosts: gitlab-instance
   become: true
-  vars:
-    env_file: "/tmp/.env" 
 
   tasks:
-    - name: Copy .env file to remote server
-      copy:
-        src: "./.env"
-        dest: "/tmp/.env"   
-    
-    - name: Get env file content
-      slurp:
-        src: /tmp/.env
-      register: env_file
-
-    - name: Parse environment
-      set_fact:
-        env_vars: "{{ ('{' + (env_file.content | b64decode).split('\n') | select | map('regex_replace', '([^=]*)=(.*)', '\"\\1\": \"\\2\"') | join(',') + '}') | from_json }}"
-
     - name: Update and Install the Dependencies
       apt:
         name: "{{ item }}"
