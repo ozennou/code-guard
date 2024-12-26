@@ -5,4 +5,3 @@
 .env2
 playbooks/gitlab.rb
 playbooks/inventory.ini
-test
