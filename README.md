@@ -25,6 +25,3 @@ https://groups.google.com/g/ansible-project/c/OZPu-b17n_w?pli=1
 ![img1](./imgs/img3.png)
 ![img1](./imgs/img4.png)
 ![img1](./imgs/img2.png)
-
-
-- **CodeGuard** 
